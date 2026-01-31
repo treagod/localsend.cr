@@ -1,0 +1,13 @@
+name: localsend
+version: 0.1.0
+
+description: |
+  LocalSend protocol v2 for Crystal: discover peers on the LAN, send and
+  receive files over mutual TLS. Interoperable with the official LocalSend app.
+
+authors:
+  - Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+
+crystal: '>= 1.19.0'
+
+license: MIT
