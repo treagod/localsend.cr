@@ -1,4 +1,6 @@
 require "./localsend/version"
+require "./localsend/log"
+require "./localsend/error"
 
 # LocalSend protocol v2 for Crystal.
 #
