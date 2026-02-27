@@ -5,6 +5,7 @@ require "./localsend/identity"
 require "./localsend/device"
 require "./localsend/protocol/tls"
 require "./localsend/discovery"
+require "./localsend/client"
 
 # LocalSend protocol v2 for Crystal.
 #
