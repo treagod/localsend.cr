@@ -23,6 +23,7 @@ module LocalSend
     getter port : Int32
 
     @session : Session?
+    @server : TCPServer?
     @running = false
     @wrong_pins = 0
 
