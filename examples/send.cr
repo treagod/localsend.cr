@@ -1,6 +1,6 @@
 # Sends files to a LocalSend device found by alias or address.
 #
-#   crystal run examples/send.cr -- --device Marvin test.txt
+#   crystal run examples/send.cr -- --device treagod test.txt
 require "option_parser"
 require "../src/localsend"
 
