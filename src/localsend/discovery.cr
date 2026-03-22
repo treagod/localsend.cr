@@ -29,8 +29,8 @@ module LocalSend
 
     ANNOUNCE_INTERVAL = 30.seconds
 
-    # Allow peers enough time to reannounce before considering them lost.
-    FORGET_AFTER = 90.seconds
+    # Allow missed announcements before emitting `Lost`.
+    FORGET_AFTER = 5.minutes
 
     getter events : Channel(Event)
 

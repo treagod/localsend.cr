@@ -7,3 +7,8 @@
 # Libraries don't need dependency lock
 # Dependencies will be locked in applications that use them
 /shard.lock
+
+# Test artifacts from running the examples in-tree
+/identity/
+/tmp-identity/
+/received/
