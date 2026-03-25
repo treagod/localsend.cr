@@ -7,6 +7,7 @@ require "../src/localsend"
 target = ""
 port = LocalSend::DEFAULT_PORT
 identity_dir = Path["./identity"]
+device_alias = "Crystal LocalSend"
 pin = nil.as(String?)
 wait = 5.seconds
 
@@ -14,6 +15,7 @@ parser = OptionParser.parse do |p|
   p.banner = "Usage: crystal run examples/send.cr -- --device ALIAS|ADDRESS FILE..."
   p.on("--device NAME", "Target device alias or address") { |v| target = v }
   p.on("--port PORT", "Local HTTP port (default: #{port})") { |v| port = v.to_i }
+  p.on("--alias NAME", "Alias advertised to other devices (default: #{device_alias})") { |v| device_alias = v }
   p.on("--identity DIR", "Where to keep the certificate (default: #{identity_dir})") { |v| identity_dir = Path[v] }
   p.on("--pin CODE", "PIN the receiver asks for") { |v| pin = v }
   p.on("--wait SECONDS", "How long to look for the device (default: 5)") { |v| wait = v.to_i.seconds }
@@ -29,7 +31,7 @@ end
 Log.setup_from_env(default_level: :info)
 
 identity = LocalSend::Identity.load_or_create(identity_dir,
-  alias: "Crystal Sailfish Test", device_model: "Crystal", device_type: :headless)
+  alias: device_alias, device_model: "Crystal", device_type: :headless)
 
 # Discovery supplies the certificate fingerprint expected for the connection.
 discovery = LocalSend::Discovery.new(identity, port: port)

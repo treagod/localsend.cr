@@ -6,10 +6,12 @@ require "../src/localsend"
 
 port = LocalSend::DEFAULT_PORT
 identity_dir = Path["./identity"]
+device_alias = "Crystal LocalSend"
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: crystal run examples/discover.cr -- [--port PORT]"
   parser.on("--port PORT", "HTTP port to announce (default: #{port})") { |v| port = v.to_i }
+  parser.on("--alias NAME", "Alias advertised to other devices (default: #{device_alias})") { |v| device_alias = v }
   parser.on("--identity DIR", "Where to keep the certificate (default: #{identity_dir})") { |v| identity_dir = Path[v] }
   parser.on("-h", "--help", "Show this help") { puts parser; exit 0 }
 end
@@ -17,7 +19,7 @@ end
 Log.setup_from_env(default_level: :info)
 
 identity = LocalSend::Identity.load_or_create(identity_dir,
-  alias: "Crystal Sailfish Test", device_model: "Crystal", device_type: :headless)
+  alias: device_alias, device_model: "Crystal", device_type: :headless)
 
 puts "Announcing as #{identity.alias} on port #{port}"
 puts "Fingerprint: #{identity.fingerprint}"
