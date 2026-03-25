@@ -14,5 +14,7 @@
   a three attempt limit, path traversal protection and collision-safe names.
 - Examples for discovering, sending and receiving.
 
-Verified against the official LocalSend app: discovery in both directions,
-sending a file to it, and receiving one from it.
+Verified against the official LocalSend app on macOS 26 and iOS: discovery in
+both directions, sending a file to it, and receiving a 217 KB PDF from it
+byte-for-byte, twice in a row to confirm the session releases and the second
+copy lands beside the first instead of on top of it.
