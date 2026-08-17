@@ -1,4 +1,4 @@
-require "./error"
+require "openssl_ext"
 require "./log"
 require "./version"
 
@@ -51,8 +51,7 @@ module LocalSend
       unless File.exists?(cert) && File.exists?(key)
         Log.info { "generating certificate in #{dir}" }
         Dir.mkdir_p dir, 0o700
-        openssl "req", "-x509", "-newkey", "rsa:2048", "-nodes",
-          "-keyout", key, "-out", cert, "-days", "3650", "-subj", "/CN=#{name}"
+        generate cert, key, name
         File.chmod key, 0o600
       end
 
@@ -63,8 +62,8 @@ module LocalSend
     # SHA-256 fingerprint announced to peers.
     def fingerprint : String
       @fingerprint ||= self.class.normalize(
-        self.class.openssl("x509", "-in", @certificate_path, "-noout",
-          "-fingerprint", "-sha256").split('=').last)
+        OpenSSL::X509::Certificate.new(File.read(@certificate_path))
+          .digest("SHA256").hexstring)
     end
 
     @fingerprint : String?
@@ -74,15 +73,24 @@ module LocalSend
       hash.strip.delete(':').downcase
     end
 
-    # Crystal can read certificates but cannot create them, so use the `openssl` binary.
-    protected def self.openssl(*args) : String
-      output = IO::Memory.new
-      error = IO::Memory.new
-      status = Process.run "openssl", args, output: output, error: error
-      unless status.success?
-        raise Error.new "openssl #{args.first} failed: #{error.to_s.lines.first?}"
-      end
-      output.to_s
+    private def self.generate(certificate_path : String, private_key_path : String,
+                              name : String) : Nil
+      key = OpenSSL::PKey::RSA.new(2048)
+
+      # Not `Name.parse`: it splits on '/' and would mangle an alias containing one.
+      subject = OpenSSL::X509::Name.new
+      subject.add_entry "CN", name
+
+      certificate = OpenSSL::X509::Certificate.new
+      certificate.subject = subject
+      certificate.issuer = subject
+      certificate.public_key = key.public_key
+      certificate.not_before = OpenSSL::ASN1::Time.new(0)
+      certificate.not_after = OpenSSL::ASN1::Time.days_from_now(3650)
+      certificate.sign key, OpenSSL::Digest.new("SHA256")
+
+      File.write certificate_path, certificate.to_pem
+      File.write private_key_path, key.to_pem
     end
   end
 end

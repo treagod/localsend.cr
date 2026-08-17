@@ -21,6 +21,16 @@ describe LocalSend::Identity do
     end
   end
 
+  it "puts the alias in the certificate subject and self-signs it" do
+    with_identity do |identity, _dir|
+      cert = OpenSSL::X509::Certificate.new(File.read(identity.certificate_path))
+
+      cert.subject.to_a.should eq [{"CN", "Spec Device"}]
+      cert.issuer.to_a.should eq cert.subject.to_a
+      cert.verify(cert.public_key).should be_true
+    end
+  end
+
   it "derives a 64 character hex fingerprint from the certificate" do
     with_identity do |identity, _dir|
       identity.fingerprint.should match /\A[0-9a-f]{64}\z/

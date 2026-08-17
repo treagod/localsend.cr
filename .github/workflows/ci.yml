@@ -10,6 +10,8 @@ jobs:
     container: crystallang/crystal:1.21.0
     steps:
       - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: shards install
       - name: Check formatting
         run: crystal tool format --check src spec examples
       - name: Run specs

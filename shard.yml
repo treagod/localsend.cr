@@ -10,4 +10,9 @@ authors:
 
 crystal: '>= 1.19.0'
 
+dependencies:
+  openssl_ext:
+    github: spider-gazelle/openssl_ext
+    version: ~> 2.8
+
 license: MIT

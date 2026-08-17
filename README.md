@@ -16,8 +16,7 @@ dependencies:
 
 Then `shards install`.
 
-Requires Crystal >= 1.19 and the `openssl` binary, which is used once to create the
-device certificate.
+Requires Crystal >= 1.19.
 
 ## Usage
 
